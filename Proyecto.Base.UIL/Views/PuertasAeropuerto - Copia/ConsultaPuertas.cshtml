@@ -1,0 +1,39 @@
+﻿
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo Puerta</th>
+            <th scope="col">Numero</th>
+            <th scope="col">Detalle</th>
+            <th scope="col">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Puertas>)ViewBag.ListaPuertas != null)
+            {
+                foreach (var i in (List<Puertas>)ViewBag.ListaPuertas)
+                {
+                <tr>
+                    <td onclick="irDetalle('@i.door_code)">
+                        <a href="#">@i.door_code</a>
+                    </td>
+                    <td>@i.number</td>
+                    <td>@i.detail</td>
+                    <td>@i.estado</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+

@@ -1,0 +1,64 @@
+﻿@model Aerolinea
+
+
+
+<form id="frmAerolinea">
+    <div class="mb-3">
+        <label for="airline_code" class="form-label">ID Aerolinea</label>
+        <input type="text" class="form-control" id="airline_code" name="airline_code" value="@Model.airline_code" required>
+    </div>
+    <div class="mb-3">
+        <label for="name_agency" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="name_agency" name="name_agency" value="@Model.name_agency" required>
+    </div>
+    
+
+    <div class="mb-3">
+        <label for="Ubicacion" class="form-label">Pais</label>
+
+        @Html.DropDownListFor(m => m.country_code,
+            Model.Pais,
+            "Seleccione el Pais",
+            new { @class = "form-control" })
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+
+    $(document).ready(function () {
+
+     
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmAerolinea").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSON
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Model.Ingresando' == 'False' ? '@Url.Action("Actualizar")' : '@Url.Action("Insertar")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>

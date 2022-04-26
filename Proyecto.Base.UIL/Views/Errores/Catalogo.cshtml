@@ -1,0 +1,56 @@
+﻿@* Breadcrumb *@
+
+<button type="button" class="btn btn-outline-primary" onclick="agregarRegistro()">ERROR</button>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id Error</th>
+            <th scope="col">Descripcion Error</th>
+            <th scope="col">Numero</th>
+            <th scope="col">Fecha Registro</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Errores>)ViewBag.ListaErrores != null)
+            {
+                foreach (var i in (List<Errores>)ViewBag.ListaErrores)
+                {
+                <tr>
+                    <td onclick="irDetalle('@i.record_code)">
+                        <a href="#">@i.record_code</a>
+                    </td>
+                    <td>@i.error_message_detail</td>
+                    <td>@i.number</td>
+                    <td>@i.date_time</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarRegistro = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (ID) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?ID=' + ID);
+    }
+
+</script>

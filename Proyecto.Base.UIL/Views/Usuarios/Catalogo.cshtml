@@ -1,0 +1,66 @@
+﻿@* Breadcrumb *@
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+</nav>
+
+<button type="button" class="btn btn-outline-primary" onclick="agregarUsuario()">Agregar Usuario</button>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">User Name</th>
+            <th scope="col">ID Rol</th>
+            <th scope="col">Password</th>
+            <th scope="col">Email</th>
+            <th scope="col">Security Question</th>
+            <th scope="col">Security Answer</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Usuario>)ViewBag.ListaUsuarios != null)
+            {
+                foreach (var usuario in (List<Usuario>)ViewBag.ListaUsuarios)
+                {
+                <tr>
+                    <td onclick="irDetalle('@usuario.user_name')">
+                        <a href="#">@usuario.user_name</a>
+                    </td>
+                    <td>@usuario.IDRol</td>
+                    <td>@usuario.password</td>
+                    <td>@usuario.email</td>
+                    <td>@usuario.security_question</td>
+                    <td>@usuario.security_answer</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarUsuario = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (numeroIdentificacion) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?numeroIdentificacion=' + numeroIdentificacion);
+    }
+
+</script>

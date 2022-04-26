@@ -1,0 +1,60 @@
+﻿@* Breadcrumb *@
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+</nav>
+
+<button type="button" class="btn btn-outline-primary" onclick="agregarRegistro()">Agregar Pais</button>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID Pais</th>
+            <th scope="col">Nombre Pais</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Paises>)ViewBag.ListaPais != null)
+            {
+                foreach (var i in (List<Paises>)ViewBag.ListaPais)
+                {
+                    <tr>
+                        <td onclick="irDetalle('@i.country_code')"> 
+                            <a href="#">@i.country_code</a>
+                        </td>
+                        <td>@i.country_name</td>
+                        
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarRegistro = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (ID) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?ID=' + ID);
+    }
+
+</script>

@@ -1,0 +1,62 @@
+﻿@model Puertas
+
+
+
+<form id="frmPuertas">
+    <div class="mb-3">
+        <label for="door_code" class="form-label">ID Puerta</label>
+        <input type="text" class="form-control" id="door_code" name="door_code" value="@Model.door_code" required>
+    </div>
+    <div class="mb-3">
+        <label for="number" class="form-label">Numero</label>
+        <input type="text" class="form-control" id="number" name="number" value="@Model.number" required>
+    </div>
+    <div class="mb-3">
+        <label for="detail" class="form-label">Detalle</label>
+        <input type="text" class="form-control" id="detail" name="detail" value="@Model.detail" required>
+    </div>
+    <div class="mb-3">
+        <label for="estado" class="form-label">Estado</label>
+        <input type="checkbox" class="form-control" id="estado" name="estado" value="@Model.estado">
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+
+    $(document).ready(function () {
+
+     
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmPuertas").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSON
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Model.Ingresando' == 'False' ? '@Url.Action("Actualizar")' : '@Url.Action("Insertar")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>

@@ -1,0 +1,72 @@
+﻿@model Usuario
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Home</li>
+        <li class="breadcrumb-item">Usuarios</li>
+        <li class="breadcrumb-item active" aria-current="page">Detalle Usuario</li>
+    </ol>
+</nav>
+
+<form id="frmDetalleUsuario">
+    <div class="mb-3">
+        <label for="user_name" class="form-label">Numero de Cuenta</label>
+        <input type="text" class="form-control" id="user_name" name="user_name" value="@Model.user_name" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" value="@Model.password" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Codigo de Seguridad</label>
+        <input type="email" class="form-control" id="email" name="email" value="@Model.email" required>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script src="~/js/Login/jquery.min.js"></script>
+<script src="~/js/Login/popper.js"></script>
+<script src="~/js/Login/bootstrap.min.js"></script>
+<script src="~/js/Login/main.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmDetalleUsuario").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSON
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Url.Action("InsertarUsuario")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>

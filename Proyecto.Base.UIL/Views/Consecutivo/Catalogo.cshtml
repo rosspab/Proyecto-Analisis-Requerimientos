@@ -1,0 +1,61 @@
+﻿@* Breadcrumb *@
+
+
+<button type="button" class="btn btn-outline-primary" onclick="agregarRegistro()">Agregar Consecutivo</button>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID Consecutivo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Prefijo</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Rango Inicial</th>
+            <th scope="col">Rango Final</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Consecutivos>)ViewBag.ListaConsecutivos != null)
+            {
+                foreach (var i in (List<Consecutivos>)ViewBag.ListaConsecutivos)
+                {
+                <tr>
+                    <td onclick="irDetalle('@i.consecutive_id)">
+                        <a href="#">@i.consecutive_id</a>
+                    </td>
+                    <td>@i.description</td>
+                    <td>@i.prefix</td>
+                    <td>@i.consecutive_value</td>
+                    <td>@i.inf_range</td>
+                    <td>@i.max_range</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarRegistro = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (numeroIdentificacion) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?numeroIdentificacion=' + numeroIdentificacion);
+    }
+
+</script>

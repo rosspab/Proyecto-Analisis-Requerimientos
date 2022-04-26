@@ -1,0 +1,57 @@
+﻿
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Vuelo ID</th>
+            <th scope="col">Aerolinea</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Fecha/Hora</th>
+            <th scope="col">Puerta</th>
+            <th scope="col">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        
+
+        @{
+            if ((List<Vuelos>)ViewBag.ListaVuelos != null)
+            {
+                foreach (var i in (List<Vuelos>)ViewBag.ListaVuelos)
+                {
+                <tr>
+                    <td>@i.vuelo_id</td>
+                    <td>@i.aerolinea</td>
+                    <td>@i.destino</td>
+                    <td>@i.fecha_hora</td>
+                    <td>@i.puerta</td>
+                    <td>@i.estado</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarRegistro = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (ID) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?ID=' + ID);
+    }
+
+</script>

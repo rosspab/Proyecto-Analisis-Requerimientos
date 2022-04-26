@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Sidebar 07</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/Layout/style.css">
+
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <title>Sistema de Captaciones</title>
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="active">
+            <h1><a href="index.html" class="logo">R.</a></h1>
+            <ul class="list-unstyled components mb-5">
+                <li class="active seguridad">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Usuarios/Catalogo')"><span class="fa fa-user"></span>Usuarios</a>
+                </li>
+                @*<li class="active">
+            <a href="#" onclick="seleccionaropcionmenu('/roles/catalogo')"><span class="fa fa-user"></span>roles</a>
+        </li>*@
+                <li class="active consecutivo admin">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Consecutivo/Catalogo')"><span class="fa fa-user"></span>Consecutivos</a>
+                </li>
+                <li class="active admin">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Pais/Catalogo')"><span class="fa fa-user"></span>Paises</a>
+                </li>
+                <li class="active admin">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Aerolinea/Catalogo')"><span class="fa fa-user"></span>Aerolineas</a>
+                </li>
+                <li class="active admin">
+                    <a href="#" onclick="seleccionarOpcionMenu('/PuertasAeropuerto/Catalogo')"><span class="fa fa-user"></span>Puertas Aeropuerto</a>
+                </li>
+                <li class="active consulta">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Bitacora/Catalogo')"><span class="fa fa-user"></span>Consulta Bitacora</a>
+                </li>
+                <li class="active consulta">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Errores/Catalogo')"><span class="fa fa-user"></span>Consulta Errores</a>
+                </li>
+                <li class="active consulta">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Aerolinea/ConsultaAerolinea')"><span class="fa fa-user"></span>Consulta Aerolineas por Pais</a>
+                </li>
+                <li class="active consulta">
+                    <a href="#" onclick="seleccionarOpcionMenu('/PuertasAeropuerto/ConsultaPuertas')"><span class="fa fa-user"></span>Consulta Puertas</a>
+                </li>
+                <li class="active cliente">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Vuelos/CatalogoEntrantes')"><span class="fa fa-user"></span>Consulta Vuelos Entrantes</a>
+                </li>
+                <li class="active cliente">
+                    <a href="#" onclick="seleccionarOpcionMenu('/Vuelos/CatalogoSalientes')"><span class="fa fa-user"></span>Consulta Vuelos Salientes</a>
+                </li>
+                <li class="active cliente">
+                    <a href="#" onclick="seleccionarOpcionMenu('/CompraReserva/Catalogo')"><span class="fa fa-user"></span>Compra/Reserva</a>
+                </li>
+ 
+
+
+                @*<li>
+            <a href="#" onclick="seleccionarOpcionMenu('', '/Solicitudes/Catalogo')"><span class="fa fa-file"></span>Solicitudes</a>
+        </li>
+        <li>
+            <a href="#" onclick="seleccionarOpcionMenu('', '/Reportes/Catalogo')"><span class="fa fa-line-chart"></span> Reportes</a>
+        </li>*@
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5">
+            <div class="container-fluid" style="">
+                <div id="divCuerpo">
+                    <div id="divMenuPrincipald"></div>
+                    @RenderBody()
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/js/funcionesComunes.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/Layout/popper.js"></script>
+    <script src="~/js/Layout/bootstrap.min.js"></script>
+    <script src="~/js/Layout/main.js"></script>
+    <script src="~/js/Login/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js'></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var rol = getCookie('rol')
+
+            $('.cliente').hide();
+            $('.admin').hide();
+            $('.consulta').hide();
+            $('.consecutivo').hide();
+            $('.seguridad').hide();
+
+            if ( rol == 1) {
+                $('.admin').show();
+                $('.consulta').show();
+                $('.consecutivo').show();
+                $('.seguridad').show();
+            } else if (rol == 2) {
+                $('.seguridad').show();
+            } else if (rol == 3) {
+                $('.admin').show();
+                $('.consecutivo').show();
+            } else if (rol == 4) {
+                $('.consulta').show();
+            } else if (rol == 5) {
+                $('.cliente').show();
+            }
+        })
+
+        var AppName = '@Context.Request.PathBase.Value.Replace("/", "")';
+
+        seleccionarOpcionMenu = function (accion, parametros = '') {
+            return $.ajax({
+                    url: '/' + AppName + accion + parametros,
+                    type: "GET"  // Verbo HTTP
+                })
+                // Se ejecuta si todo fue bien.
+                .done(function (result) {
+                    $("#divCuerpo").html(result);
+                })
+                // Se ejecuta si se produjo un error.
+                .fail(function (xhr, status, error) {
+                    console.error(error);
+                    alert(error.toString());
+                })
+        }
+        function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    </script>
+
+</body>
+</html>

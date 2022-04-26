@@ -1,0 +1,55 @@
+﻿@model Roles
+
+
+
+<form id="frmPaises">
+    <div class="mb-3">
+        <label for="Id_Rol" class="form-label">ID Rol</label>
+        <input type="text" class="form-control" id="Id_Rol" name="Id_Rol" value="@Model.rol_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="Descripcion" class="form-label">Descripcion</label>
+        <input type="text" class="form-control" id="Descripcion" name="Descripcion" value="@Model.description" required>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmPaises").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSO
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Model.Ingresando' == 'False' ? '@Url.Action("Actualizar")' : '@Url.Action("Insertar")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                            $('#Numero_Identificacion').prop('disabled', true);
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>

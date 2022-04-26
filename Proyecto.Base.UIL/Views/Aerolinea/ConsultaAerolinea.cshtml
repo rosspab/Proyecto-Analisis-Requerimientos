@@ -1,0 +1,57 @@
+﻿@model Aerolinea 
+@* Breadcrumb *@
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <label for="Ubicacion" class="form-label">Pais</label>
+
+    @Html.DropDownListFor(m => m.country_code,
+        Model.Pais,
+        "Seleccione el Pais",
+        new { @class = "form-control" })
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo Aerolinea</th>
+            <th scope="col">Nombre Agencia</th>
+            <th scope="col">Ubicacion</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Aerolinea>)ViewBag.ListaAerolinea != null)
+            {
+                foreach (var i in (List<Aerolinea>)ViewBag.ListaAerolinea)
+                {
+                    <tr>
+                        <td onclick="irDetalle('@i.airline_code)"> 
+                            <a href="#">@i.airline_code</a>
+                        </td>
+                        <td>@i.name_agency</td>
+                        <td>@i.country_code</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+

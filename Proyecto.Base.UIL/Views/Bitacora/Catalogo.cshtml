@@ -1,0 +1,58 @@
+﻿
+
+<button type="button" class="btn btn-outline-primary" onclick="agregarRegistro()">Bitacora</button>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo de Record</th>
+            <th scope="col">Fecha Hora</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Accion</th>
+            <th scope="col">Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*Permite crear las rows de la tabla*@
+
+        @{
+            if ((List<Bitacora>)ViewBag.ListaBitacora != null)
+            {
+                foreach (var i in (List<Bitacora>)ViewBag.ListaBitacora)
+                {
+                <tr>
+                    <td onclick="irDetalle('@i.record_code)">
+                        <a href="#">@i.record_code</a>
+                    </td>
+                    <td>@i.date_time</td>
+                    <td>@i.user_name</td>
+                    <td>@i.action_description</td>
+                    <td>@i.detail</td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay registros existentes</td>
+                </tr>
+            }
+        }
+     </tbody>
+</table>
+
+<script>
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo inserción
+    var agregarRegistro = function () {
+        $(idDivCuerpo).load('@Url.Action("Detalle")');
+    }
+
+    // Redirecciona a la pantalla con la informacion del usuario en modo edicion
+    var irDetalle = function (ID) {
+        $(idDivCuerpo).load('@Url.Action("Detalle")' + '?ID=' + ID);
+    }
+
+</script>

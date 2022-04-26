@@ -1,0 +1,73 @@
+﻿@model Consecutivos
+
+<form id="frmConsecutivo">
+    <div class="mb-3">
+        <label for="consecutive_id" class="form-label">ID Consecutivo</label>
+        <input type="text" class="form-control" id="consecutive_id" name="consecutive_id" value="@Model.consecutive_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="prefix" class="form-label">Prefijo</label>
+        <input type="text" class="form-control" id="prefix" name="prefix" value="@Model.prefix" required>
+    </div>
+    <div class="mb-3">
+        <label for="consecutive_value" class="form-label">Valor</label>
+        <input type="text" class="form-control" id="consecutive_value" name="consecutive_value" value="@Model.consecutive_value" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="inf_range" class="form-label">Rango Inicial</label>
+        <input type="text" class="form-control" id="inf_range" name="inf_range" value="@Model.inf_range" required>
+    </div>
+    <div class="mb-3">
+        <label for="max_range" class="form-label">Rango Final</label>
+        <input type="text" class="form-control" id="max_range" name="max_range" value="@Model.max_range" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="Rol" class="form-label">Consecutivo</label>
+
+        @Html.DropDownListFor(m => m.description,
+            Model.ListaNombre,
+            "Lista Nombres",
+            new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+
+    $(document).ready(function () {
+
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmConsecutivo").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSON
+
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Model.Ingresando' == 'False' ? '@Url.Action("Actualizar")' : '@Url.Action("Insertar")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>

@@ -1,0 +1,165 @@
+﻿@model Compra
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--Card-->
+<div class="card shadow mb-5 bg-white rounded">
+
+    <form id="frmBusquedaVuelos">
+        <!--Card-Body-->
+        <div class="card-body">
+            <!--Card-Title-->
+
+            <div class="icons text-center">
+                <i class="fa fa-plane fa-2x" aria-hidden="true"></i>
+                <i class="fa fa-taxi fa-2x" aria-hidden="true"></i>
+                <i class="fa fa-train fa-2x" aria-hidden="true"></i>
+            </div>
+            <hr>
+            <p class="searchText"><strong>Search For Cheap Flights</strong></p>
+            <!--First Row-->
+
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <option value="" disabled="" selected="">From City/Airport</option>
+                    @Html.DropDownListFor(m => m.country_code,
+                    Model.Pais,
+                    new { @class = "browser-default custom-select mb-4", @id = "from-country"})
+
+                </div>
+                <div class="col-sm-6">
+                    <option value="" disabled="" selected="">To City/Airport</option>
+                    @Html.DropDownListFor(m => m.country_code,
+                    Model.Pais,
+                    new { @class = "browser-default custom-select mb-4", @id = "to-country" })
+                </div>
+            </div>
+            <!--Third Row-->
+            <div class="row">
+                <div class="col-sm-6"> <input placeholder="&#xf073; Departing" type="date" id="date-picker" class="form-control datepicker mb-4" style="font-family:Arial, FontAwesome"> </div>
+                <div class="col-sm-6">
+                    <select class="browser-default custom-select mb-4" id="cantidad_boletos">
+                        <option value="" disabled="" selected="">Boletos</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="3">4</option>
+                        <option value="3">5</option>
+                        <option value="3">6</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--Fifth Row-->
+
+        </div>
+
+        <button type="submit" class="btn btn-primary float-right mt-5">Find Flights</button>
+
+    </form>
+
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Vuelo ID</th>
+            <th scope="col">Aerolinea</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Fecha/Hora</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+
+
+
+        @{
+        if ((List
+        <Vuelos>
+            )ViewBag.ListaVuelos != null)
+            {
+            foreach (var i in (List<Vuelos>
+                )ViewBag.ListaVuelos)
+                {
+                <tr>
+
+                    <td>@i.vuelo_id</td>
+                    <td>@i.aerolinea</td>
+                    <td>@i.destino</td>
+                    <td>@i.fecha_hora</td>
+                    <td> <button type="button" onclick="comprar('@i.vuelo_id')" class="btn btn-primary float-right">Comprar</button> </td>
+                    <td><button type="button" onclick="reservar('@i.vuelo_id')" class="btn btn-primary float-right">Reservar</button></td>
+
+                </tr>
+                }
+                }
+                else
+                {
+                <tr>
+                    <td colspan="3">No hay vuelos segun su busqueda</td>
+                </tr>
+                }
+                }
+    </tbody>
+</table>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        // Se ejecuta cada vez que se quiere enviar el formulario
+        $("#frmBusquedaVuelos").on("submit", function (event) {
+            event.preventDefault();
+
+            var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSON
+            modelo = modelo + "&procedencia=" + $('#from-country').val()
+            modelo = modelo + "&destino=" + $('#to-country').val()
+            modelo = modelo + "&fecha_hora=" + $('#date-picker').val()
+            modelo = modelo + "&cantidad_boletos=" + $('#cantidad_boletos').val()
+
+            //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+            var urlAccion = '@Url.Action("ObtenerVuelos")'
+
+            $(idDivCuerpo).load(urlAccion + '?' + modelo);
+
+
+
+        });
+
+    })
+
+    function reservar(idVuelo) {
+
+        var modelo = {
+            user_name: "q", vuelo_id: idVuelo, quantity: $('#cantidad_boletos').val(), is_reservation: "true"
+        }
+
+
+        return $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Reservar")',
+            dataType: 'JSON',
+            data: modelo,
+            success: function (data) {
+                if (data.codigoResult == 'ERROR') {
+                    swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                } else {
+                    swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                }
+            },
+            error: function (errorThrown) {
+                swal("Error", errorThrown, "error");
+            }
+        });
+    }
+
+    function comprar(idVuelo) {
+        $(idDivCuerpo).load('@Url.Action("Catalogo", "Payment")' + '?idVuelo=' + idVuelo);
+    }
+
+</script>
+

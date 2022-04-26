@@ -1,0 +1,50 @@
+﻿@model Paises 
+
+<form id="frmPaises">
+    <div class="mb-3">
+        <label for="country_code" class="form-label">ID Pais</label>
+        <input type="text" class="form-control" id="country_code" name="country_code" value="@Model.country_code" disabled>
+    </div>
+    <div class="mb-3">
+        <label for="country_name" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="country_name" name="country_name" value="@Model.country_name" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+
+    $(document).ready(function () {
+
+        // Se ejecuta cada vez que se quiere enviar el formulario
+         $("#frmPaises").on("submit", function (event) {
+                event.preventDefault();
+
+                var modelo = $(this).serialize(); //Convierte los campos del formulario en un JSO
+                modelo = modelo + "&country_code=" + $("#country_code").val();
+
+                //Indica que accion del controlador ejecutar dependiendo de si se está insertando o no
+                var urlAccion =  '@Model.Ingresando' == 'False' ? '@Url.Action("Actualizar")' : '@Url.Action("Insertar")'
+
+                return $.ajax({
+                    type: 'POST',
+                    url: urlAccion,
+                    dataType: 'JSON',
+                    data: modelo,
+                    success: function (data) {
+                        if (data.codigoResult == 'ERROR') {
+                            swal("Error", data.descripcion_respuesta, "error"); // Muestra mensaje Error
+                        } else {
+                            swal("Exito!", "Transacción Realizada Satisfactoriamente", "success"); // Muestra mensaje satisfactorio
+                        }
+                    },
+                    error: function (errorThrown) {
+                        swal("Error", errorThrown, "error");
+                    }
+                });
+            });
+
+        })
+
+
+</script>
