@@ -45,7 +45,7 @@ namespace Proyecto.Base.UIL.Controllers
                 modelo.Ingresando = false;
             } else
             {
-                var consecutivo = ObtenerConsecutivo("Aerolinea");
+                var consecutivo = ObtenerConsecutivo("Aerolineas El Pollon");
                 var id = consecutivo.prefix + consecutivo.consecutive_value.ToString();
                 modelo.airline_code = id;
             }
